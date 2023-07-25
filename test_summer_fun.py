@@ -26,3 +26,4 @@ c2 = Customer("Emily Williams", Rating.FIRST_TIME)
 price = p1.calculate_price_for_customer(c1, date(2024, 7, 12))
 
 
+
