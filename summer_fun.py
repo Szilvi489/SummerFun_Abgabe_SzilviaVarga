@@ -33,6 +33,13 @@ class Customer:
     def __str__(self):
         return f"{self.name} ({self.rating})"
 
+    def create_customer_list(*customers):
+        return list(customers)
+
+    def print_customers(customers):
+      for customer in customers:
+        print(f"Name: {customer.name}, Rating: {customer.rating}")
+
 
 class Product:
     _EAN_PATTERN = re.compile(r"^\d{13}$")
@@ -87,32 +94,7 @@ class Product:
         return price_after_additional_discount
 
 
-customer1 = Customer("Szilvi", Rating.REGULAR)
-customer2 = Customer("Bob", Rating.REGULAR)
-customer3 = Customer("Joy", Rating.SUPER_DUPER)
-customer4 = Customer("Dora", Rating.FIRST_TIME)
-customer5 = Customer("Rachel", Rating.SUPER_DUPER)
-customer6 = Customer("Eric", Rating.FIRST_TIME)
-
-#name, description, base price, base discount
-product1 = Product("9780201379624", "IPhone", "Orange", Decimal(1000), Decimal(0.1))
-product2 = Product("4006381333963", "Coffee Beans", "Aromatic", Decimal(50), Decimal(0.5))
-product3 = Product("7351350379856", "Horse", "Friendly", Decimal(13000), Decimal(0.01))
-product4 = Product("7351350999856", "Straw", "Long", Decimal(1), Decimal(0.00))
-
-def create_customer_list(*customers):
-    return list(customers)
-
-def print_customers(customers):
-    for customer in customers:
-        print(f"Name: {customer.name}, Rating: {customer.rating}")
 
 
-customer_list = create_customer_list(customer1, customer2, customer3, customer4, customer5, customer6)
 
-print_customers(customer_list)
 
-purchase_date = date(2024, 7, 22)  #date object for July 22, 2024
-price = product1.calculate_price_for_customer(customer1, purchase_date)#10%discount, Monday, Price:1000, 10%Discount
-
-print(price)
