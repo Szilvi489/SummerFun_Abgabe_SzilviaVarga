@@ -1,6 +1,6 @@
 import re
 from enum import Enum
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN, ROUND_UP
 from datetime import date
 from datetime import date
 import calendar
@@ -78,20 +78,32 @@ class Product:
             Rating.SUPER_DUPER: Decimal('0.15'),
         }
 
-        # Get the customer discount
-        discount = discount_mapping[customer.rating]
+        # Always apply base discount
+        if self.base_discount>0:
+          price_after_base_discount = self.base_price * (1 - self.base_discount)
+        else:
+          price_after_base_discount = self.base_price
 
         # Check if the date is in the special summer sale period
         if date_of_purchase.year == 2024 and date_of_purchase.month in [7, 8]:
-            # Check if the date is Friday or Saturday
+            # Get the customer discount
+            discount = discount_mapping[customer.rating]
+
+            # Check if the date is Friday or Saturday, if so double the discount
             if date_of_purchase.weekday() in [4, 5]: # 4 and 5 corresponds to Friday and Saturday
                 discount *= 2  # double the discount
 
-        # Apply the customer discount on top of the base discount
-        price_after_base_discount = self.base_price * (1 - self.base_discount)
-        price_after_additional_discount = price_after_base_discount * (1 - discount)
+            # Apply the customer discount on top of the already discounted price
+            price_after_additional_discount = price_after_base_discount * (1 - discount)
+        else:
+            # If outside the sale period, only base discount applies
+            price_after_additional_discount = price_after_base_discount
 
-        return price_after_additional_discount
+        # Round the price to 3 decimal places
+        rounded_price = price_after_additional_discount.quantize(Decimal('0.000'), rounding=ROUND_UP)
+
+        return rounded_price
+
 
 
 

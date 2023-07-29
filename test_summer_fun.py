@@ -48,50 +48,133 @@ print(price)
 
 #*************NOT FINAL VERSION!!!!*************TEST CASES ARE NOT IMPLEMENTED CORRECTLY******************
 
-def test_calculate_price_for_customer():
 
-    #SETTING UP TEST DATA
-    # a product with the price: 19.99, and a 10% base discount
-    p1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0.1))
+#First Time customer outside sale period
+#Border values: 2024.06.31=MIN
+#             : 2024.09.01=MAX
 
-    # the different rating test cases
-    purchase_date = date(2024, 7, 22)  #date object for July 22, 2024
-
-    #customers with different ratings
-    customer1 = Customer("Dora", Rating.FIRST_TIME)
-    customer2 = Customer("Szilvi", Rating.REGULAR)
-    customer3 = Customer("Rachel", Rating.SUPER_DUPER)
-
-    assert p1.calculate_price_for_customer(customer1, date(2024, 6, 12)) == Decimal("19.9")  #                   test case 1
-    assert p1.calculate_price_for_customer(customer1, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.95")  #           2
-    assert p1.calculate_price_for_customer(customer1, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.90")  #           3
-    assert p1.calculate_price_for_customer(customer2, date(2024, 6, 12)) == Decimal("19.9")  #                             4
-    assert p1.calculate_price_for_customer(customer2, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.90")  #           5
-    assert p1.calculate_price_for_customer(customer2, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.80")  #           6
-    assert p1.calculate_price_for_customer(customer3, date(2024, 6, 12)) == Decimal("19.9")  #                             7
-    assert p1.calculate_price_for_customer(customer3, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.85")  #           8
-    assert p1.calculate_price_for_customer(customer3, date(2024, 7, 12)) == Decimal("19.9") * Decimal("0.70")  #           9
-
-    # Test cases with invalid inputs
-    with pytest.raises(ValueError):
-        p1.calculate_price_for_customer("Invalid Customer", date(2024, 7, 12))  # Test case 10
-    with pytest.raises(ValueError):
-        p1.calculate_price_for_customer(customer1, "Invalid Date")  #                       11
-
-
-
-
-def test_calculate_price_for_first_time_customer_outside_sale_period():
+#MIN:
+def test_calculate_price_for_first_time_customer_outside_sale_period_MIN():
     # Arrange
 
-    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0.0))
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
     customer1 = Customer("Dora", Rating.FIRST_TIME)
-    date_string = "2024-06-30"
+    date_string = "2024-06-31"
     purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
 
     # Act
-    result = p1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
 
     # Assert
-    assert result == Decimal("19.9"), "First Time customer outside sale period"
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+#MAX:
+def test_calculate_price_for_first_time_customer_outside_sale_period_MAX():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer1 = Customer("Dora", Rating.FIRST_TIME)
+    date_string = "2024-09-01"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+
+#First Time customer inside sale period (not Fri/Sat)
+#Border values:One date right before Friday:Thursday:11.07.2024,
+#              One date right after a saturday, but on a weekday:Monday:15.07.2024
+
+#Before Friday:
+def test_calculate_price_for_first_time_customer_inside_sale_period_NOTFriOrSat():
+ # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer1 = Customer("Dora", Rating.FIRST_TIME)
+    date_string = "2024-07-11"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+  # Act
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+#After Saturday:
+def test_calculate_price_for_first_time_customer_inside_sale_period_NOTFriOrSat():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer1 = Customer("Dora", Rating.FIRST_TIME)
+    date_string = "2024-07-15"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+
+#First Time customer inside sale period (Fri/Sat)
+#Border values:Friday:26.07.2024,
+#              Saturday:17.08.2024
+#Friday:
+def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer1 = Customer("Dora", Rating.FIRST_TIME)
+    date_string = "2024-07-26"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+#Saturday:
+def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer1 = Customer("Dora", Rating.FIRST_TIME)
+    date_string = "2024-08-17"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer1, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "First Time customer outside sale period"
+
+#Regular customer outside sale period
+def test_calculate_price_for_regular_customer_outside_sale_period():
+   return 0
+#Regular customer inside sale period (not Fri/Sat)
+
+def test_calculate_price_for_regular_customer_inside_sale_period_NOTFriOrSat():
+       return 0
+#Regular customer inside sale period (Fri/Sat)
+
+def test_calculate_price_for_regular_customer_inside_sale_period_FriOrSat():
+       return 0
+#Super Duper customer outside sale period
+def test_calculate_price_for_superDuper_customer_outside_sale_period():
+       return 0
+#Super Duper customer inside sale period (not Fri/Sat)
+def test_calculate_price_for_superDuper_customer_inside_sale_period_NOTFriOrSat():
+       return 0
+#Super Duper customer inside sale period (Fri/Sat)
+def test_calculate_price_for_superDuper_customer_inside_sale_period_FriOrSat():
+       return 0
+#Invalid Rating
+def test_calculate_price_for_invalidRating_customer_outside_sale_period():#where date is irrelevant aka doesnt matter if outside or inside of the sale period
+       return 0
+#Invalid Date
+def test_calculate_price_for_first_time_customer_invalid_date():#where customer rating is valid but type is irrelevant
+       return 0
 
