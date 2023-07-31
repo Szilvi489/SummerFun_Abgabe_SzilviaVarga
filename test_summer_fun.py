@@ -48,7 +48,7 @@ print(price)
 
 #*************NOT FINAL VERSION!!!!*************TEST CASES ARE NOT IMPLEMENTED CORRECTLY******************
 
-
+#FIRST_TIME CUSTOMER
 #First Time customer outside sale period
 #Border values: 2024.06.31=MIN
 #             : 2024.09.01=MAX
@@ -122,7 +122,7 @@ def test_calculate_price_for_first_time_customer_inside_sale_period_NOTFriOrSat(
 #Border values:Friday:26.07.2024,
 #              Saturday:17.08.2024
 #Friday:
-def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
+def test_calculate_price_for_first_time_customer_inside_sale_period_Fri():
     # Arrange
 
     product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
@@ -137,7 +137,7 @@ def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
     assert result == Decimal("19.99"), "First Time customer outside sale period"
 
 #Saturday:
-def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
+def test_calculate_price_for_first_time_customer_inside_sale_period_Sat():
     # Arrange
 
     product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
@@ -151,30 +151,209 @@ def test_calculate_price_for_first_time_customer_inside_sale_period_FriOrSat():
     # Assert
     assert result == Decimal("19.99"), "First Time customer outside sale period"
 
+
+#REGULAR CUSTOMER
 #Regular customer outside sale period
-def test_calculate_price_for_regular_customer_outside_sale_period():
-   return 0
+#Border values: 2024.06.31=MIN
+#             : 2024.09.01=MAX
+#MIN
+def test_calculate_price_for_regular_customer_outside_sale_period_MIN():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-06-31"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+#MAX
+def test_calculate_price_for_regular_customer_outside_sale_period_MAX():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-09-01"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+
 #Regular customer inside sale period (not Fri/Sat)
-
+#Border values:One date right before Friday:Thursday:11.07.2024,
+#              One date right after a saturday, but on a weekday:Monday:15.07.2024
+#Right before Friday
 def test_calculate_price_for_regular_customer_inside_sale_period_NOTFriOrSat():
-       return 0
-#Regular customer inside sale period (Fri/Sat)
+       # Arrange
 
-def test_calculate_price_for_regular_customer_inside_sale_period_FriOrSat():
-       return 0
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-07-11"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+#Regular customer inside sale period (Fri/Sat)
+#Right after saturday (Weekday:Monday)
+def test_calculate_price_for_regular_customer_inside_sale_period_NOTFriOrSat():
+       # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-07-11"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+#Regular customer inside sale peirod fri or saturday
+#Border values:Friday:26.07.2024,
+#              Saturday:17.08.2024
+#Friday
+def test_calculate_price_for_regular_customer_inside_sale_period_Fri():
+         # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-07-26"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+#Saturday
+def test_calculate_price_for_regular_customer_inside_sale_period_Fri():
+         # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer2 = Customer("Bob", Rating.REGULAR)
+    date_string = "2024-08-17"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer2, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Regular customer outside sale period"
+
+#Super-Duper Customer
 #Super Duper customer outside sale period
-def test_calculate_price_for_superDuper_customer_outside_sale_period():
-       return 0
-#Super Duper customer inside sale period (not Fri/Sat)
+#Border values: 2024.06.31=MIN
+#             : 2024.09.01=MAX
+#MIN
+def test_calculate_price_for_superDuper_customer_outside_sale_period_MIN():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-06-31"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
+#MAX
+def test_calculate_price_for_superDuper_customer_outside_sale_period_MAX():
+    # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-09-01"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
+
+#Regular customer inside sale period (not Fri/Sat)
+#Border values:One date right before Friday:Thursday:11.07.2024,
+#              One date right after a saturday, but on a weekday:Monday:15.07.2024
+#Right before Friday
 def test_calculate_price_for_superDuper_customer_inside_sale_period_NOTFriOrSat():
-       return 0
-#Super Duper customer inside sale period (Fri/Sat)
-def test_calculate_price_for_superDuper_customer_inside_sale_period_FriOrSat():
-       return 0
-#Invalid Rating
-def test_calculate_price_for_invalidRating_customer_outside_sale_period():#where date is irrelevant aka doesnt matter if outside or inside of the sale period
-       return 0
-#Invalid Date
-def test_calculate_price_for_first_time_customer_invalid_date():#where customer rating is valid but type is irrelevant
-       return 0
+       # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-07-11"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
+#Regular customer inside sale period (Fri/Sat)
+#Right after saturday (Weekday:Monday)
+def test_calculate_price_for_regular_customer_inside_sale_period_NOTFriOrSat():
+       # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-07-11"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
+#Regular customer inside sale peirod fri or saturday
+#Border values:Friday:26.07.2024,
+#              Saturday:17.08.2024
+#Friday
+def test_calculate_price_for_superDuper_customer_inside_sale_period_Fri():
+         # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-07-26"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
+#Saturday
+def test_calculate_price_for_superDuper_customer_inside_sale_period_Fri():
+         # Arrange
+
+    product1 = Product("9780201379624", "IPhone", "Orange", Decimal(19.99), Decimal(0))
+    customer3 = Customer("Joy", Rating.SUPER_DUPER)
+    date_string = "2024-08-17"
+    purchase_date_outside_sale_MIN = datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    # Act
+    result = product1.calculate_price_for_customer(customer3, purchase_date_outside_sale_MIN)
+
+    # Assert
+    assert result == Decimal("19.99"), "Super-Duper customer outside sale period"
+
 
