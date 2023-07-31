@@ -1,1 +1,0 @@
-# SummerFun_Abgabe_SzilviaVarga
